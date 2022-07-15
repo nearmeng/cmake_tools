@@ -1,8 +1,8 @@
 if (MSVC)
-	set (PROTOC_EXE protoc.exe)
+	set (PROTOC_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/protoc/protoc.exe)
 	set (ERROR_FORMAT msvs)
 else ()
-	set (PROTOC_EXE protoc)
+	set (PROTOC_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/protoc/protoc)
 	set (ERROR_FORMAT gcc)
 endif ()
 
@@ -22,7 +22,7 @@ function (preprocess_proto file_path)
 		message ("removed file ${FILE_PATH}/${FILE_NAME}.h")
 
 		execute_process (
-			COMMAND "${BASE_DIR}/tools/protoc/${PROTOC_EXE}" ${FILE_NAME}.proto --proto_path=${FETCHCONTENT_BASE_DIR}/thirdparty-src/protobuf/include/ --proto_path=./ --error_format=${ERROR_FORMAT} --cpp_out=.
+			COMMAND "${PROTOC_EXE}" ${FILE_NAME}.proto --proto_path=${FETCHCONTENT_BASE_DIR}/thirdparty-src/protobuf/include/ --proto_path=./ --error_format=${ERROR_FORMAT} --cpp_out=.
 			WORKING_DIRECTORY ${FILE_PATH}
 			RESULT_VARIABLE PROTO_RES)
 		if (EXISTS ${FILE_PATH}/${FILE_NAME}.pb.cc)
@@ -49,7 +49,7 @@ function (process_proto file_path)
 			OUTPUT ${FILE_PATH}/${FILE_NAME}.pb.cc 
 			OUTPUT ${FILE_PATH}/${FILE_NAME}.pb.h
 			MAIN_DEPENDENCY ${PROTO_FILE}
-			COMMAND "${BASE_DIR}/tools/protoc/${PROTOC_EXE}" ${FILE_NAME}.proto --proto_path=${FETCHCONTENT_BASE_DIR}/fetch/thirdparty-src/protobuf/include/ --proto_path=./ --error_format=${ERROR_FORMAT} --cpp_out=.
+			COMMAND "${PROTOC_EXE}" ${FILE_NAME}.proto --proto_path=${FETCHCONTENT_BASE_DIR}/fetch/thirdparty-src/protobuf/include/ --proto_path=./ --error_format=${ERROR_FORMAT} --cpp_out=.
 			WORKING_DIRECTORY ${FILE_PATH}
 		)
 		if (UNIX)
