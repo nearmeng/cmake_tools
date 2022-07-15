@@ -1,10 +1,10 @@
 
 if (MSVC)
 	#set_property (GLOBAL PROPERTY TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp.exe)
-	SET(TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp.exe))
+	SET(TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp.exe)
 else ()
 	#set_property (GLOBAL PROPERTY TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp)
-	SET(TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp))
+	SET(TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp)
 endif ()
 message("toluapp_exe location1" ${TOLUAPP_EXE})
 
