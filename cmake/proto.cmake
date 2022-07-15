@@ -1,9 +1,9 @@
 if (MSVC)
-	set (PROTOC_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/protoc/protoc.exe)
-	set (ERROR_FORMAT msvs)
+	set_property (GLOBAL PROPERTY PROTOC_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/protoc/protoc.exe)
+	set_property (GLOBAL PROPERTY PROTOC_ERR msvs)
 else ()
-	set (PROTOC_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/protoc/protoc)
-	set (ERROR_FORMAT gcc)
+	set_property (GLOBAL PROPERTY PROTOC_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/protoc/protoc)
+	set_property (GLOBAL PROPERTY PROTOC_ERR gcc)
 endif ()
 
 function (preprocess_proto file_path)
@@ -11,6 +11,10 @@ function (preprocess_proto file_path)
 	message (preprocess_proto)
 
 	file (GLOB_RECURSE PROTO_FILES "${BASE_DIR}/${file_path}/*.proto")
+	
+	get_property(ARG_PROTOC_EXE GLOBAL PROPERTY PROTOC_EXE)
+	get_property(ARG_PROTOC_ERR GLOBAL PROPERTY PROTOC_ERR)
+	get_property(ARG_PROTO_PATH GLOBAL PROPERTY PROTO_INC_PATH)
 
 	foreach (PROTO_FILE ${PROTO_FILES})
 		get_filename_component (FILE_NAME ${PROTO_FILE} NAME_WE)
@@ -22,7 +26,7 @@ function (preprocess_proto file_path)
 		message ("removed file ${FILE_PATH}/${FILE_NAME}.h")
 
 		execute_process (
-			COMMAND "${PROTOC_EXE}" ${FILE_NAME}.proto --proto_path=${FETCHCONTENT_BASE_DIR}/thirdparty-src/protobuf/include/ --proto_path=./ --error_format=${ERROR_FORMAT} --cpp_out=.
+			COMMAND "${ARG_PROTOC_EXE}" ${FILE_NAME}.proto --proto_path=${ARG_PROTO_PATH} --proto_path=./ --error_format=${ARG_PROTOC_ERR} --cpp_out=.
 			WORKING_DIRECTORY ${FILE_PATH}
 			RESULT_VARIABLE PROTO_RES)
 		if (EXISTS ${FILE_PATH}/${FILE_NAME}.pb.cc)
@@ -41,6 +45,10 @@ function (process_proto file_path)
 
 	file (GLOB_RECURSE PROTO_FILES "${BASE_DIR}/${ARGV0}/*.proto")
 	LIST(APPEND PROTO_FILES ${SERVER_PROTO_FILES})
+	
+	get_property(ARG_PROTOC_EXE GLOBAL PROPERTY PROTOC_EXE)
+	get_property(ARG_PROTOC_ERR GLOBAL PROPERTY PROTOC_ERR)
+	get_property(ARG_PROTO_PATH GLOBAL PROPERTY PROTO_INC_PATH)
 
 	foreach (PROTO_FILE ${PROTO_FILES})
 		get_filename_component (FILE_NAME ${PROTO_FILE} NAME_WE)
@@ -49,7 +57,7 @@ function (process_proto file_path)
 			OUTPUT ${FILE_PATH}/${FILE_NAME}.pb.cc 
 			OUTPUT ${FILE_PATH}/${FILE_NAME}.pb.h
 			MAIN_DEPENDENCY ${PROTO_FILE}
-			COMMAND "${PROTOC_EXE}" ${FILE_NAME}.proto --proto_path=${FETCHCONTENT_BASE_DIR}/fetch/thirdparty-src/protobuf/include/ --proto_path=./ --error_format=${ERROR_FORMAT} --cpp_out=.
+			COMMAND "${ARG_PROTOC_EXE}" ${FILE_NAME}.proto --proto_path=${PROTO_INC_PATH} --proto_path=./ --error_format=${ARG_PROTOC_ERR} --cpp_out=.
 			WORKING_DIRECTORY ${FILE_PATH}
 		)
 		if (UNIX)
