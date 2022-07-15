@@ -4,6 +4,7 @@ if (MSVC)
 else ()
 	set (TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp)
 endif ()
+message("toluapp_exe location" ${TOLUAPP_EXE})
 
 function (pre_toluapp TARGET_DIR)
 	message (----------------------------------------)
