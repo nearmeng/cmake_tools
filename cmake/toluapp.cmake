@@ -20,6 +20,7 @@ function (pre_toluapp TARGET_DIR)
 		get_filename_component (FILE_NAME ${PKG_FILE} NAME_WE)
 		get_filename_component (FILE_PATH ${PKG_FILE} DIRECTORY)
 		execute_process (
+			message(${TOLUAPP_EXE})
 			COMMAND "${TOLUAPP_EXE}" -s -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.pkg
 			WORKING_DIRECTORY ${FILE_PATH}
 			RESULT_VARIABLE TOLUAPP_RES)
