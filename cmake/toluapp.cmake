@@ -1,14 +1,16 @@
 
 if (MSVC)
-	set (TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp.exe)
+	set_property (GLOBAL PROPERTY TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp.exe)
 else ()
-	set (TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp)
+	set_property (GLOBAL PROPERTY TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp)
 endif ()
 message("toluapp_exe location1" ${TOLUAPP_EXE})
 
 function (pre_toluapp TARGET_DIR)
 	message (----------------------------------------)
 	message (pre_toluapp)
+	
+	get_property(ARG_TOLUAPP_EXE GLOBAL PROPERTY TOLUAPP_EXE)
 
 	file (GLOB_RECURSE FILE_LIST "${TARGET_DIR}/tolua_*.cpp")
 	foreach (F ${FILE_LIST})
@@ -22,7 +24,7 @@ function (pre_toluapp TARGET_DIR)
 		get_filename_component (FILE_PATH ${PKG_FILE} DIRECTORY)
 		execute_process (
 			message("toluapp_exe location2" ${TOLUAPP_EXE})
-			COMMAND "${TOLUAPP_EXE}" -s -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.pkg
+			COMMAND "${ARG_TOLUAPP_EXE}" -s -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.pkg
 			WORKING_DIRECTORY ${FILE_PATH}
 			RESULT_VARIABLE TOLUAPP_RES)
 		if (EXISTS ${FILE_PATH}/tolua_${FILE_NAME}.cpp)
@@ -37,7 +39,7 @@ function (pre_toluapp TARGET_DIR)
 		get_filename_component (FILE_NAME ${PKG_FILE} NAME_WE)
 		get_filename_component (FILE_PATH ${PKG_FILE} DIRECTORY)
 		execute_process (
-			COMMAND "${TOLUAPP_EXE}" -s -e -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.epkg
+			COMMAND "${ARG_TOLUAPP_EXE}" -s -e -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.epkg
 			WORKING_DIRECTORY ${FILE_PATH}
 			RESULT_VARIABLE TOLUAPP_RES)
 		if (EXISTS ${FILE_PATH}/tolua_${FILE_NAME}.cpp)
@@ -50,6 +52,8 @@ function (pre_toluapp TARGET_DIR)
 endfunction ()
 
 function (toluapp TARGET_DIR)
+	
+	get_property(ARG_TOLUAPP_EXE GLOBAL PROPERTY TOLUAPP_EXE)
 
 	file (GLOB_RECURSE FILE_LIST "${TARGET_DIR}/*.pkg")
 	foreach (PKG_FILE ${FILE_LIST})
@@ -69,7 +73,7 @@ function (toluapp TARGET_DIR)
 			OUTPUT ${FILE_PATH}/tolua_${FILE_NAME}.cpp 
 			MAIN_DEPENDENCY ${PKG_FILE}
 			DEPENDS ${HEADER_FILE}
-			COMMAND "${TOLUAPP_EXE}" -s -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.pkg
+			COMMAND "${ARG_TOLUAPP_EXE}" -s -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.pkg
 			WORKING_DIRECTORY ${FILE_PATH}
 		)
 		if (UNIX)
@@ -94,7 +98,7 @@ function (toluapp TARGET_DIR)
 			OUTPUT ${FILE_PATH}/tolua_${FILE_NAME}.cpp 
 			MAIN_DEPENDENCY ${PKG_FILE}
 			DEPENDS ${HEADER_FILE}
-			COMMAND "${TOLUAPP_EXE}" -s -e -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.epkg
+			COMMAND "${ARG_TOLUAPP_EXE}" -s -e -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.epkg
 			WORKING_DIRECTORY ${FILE_PATH}
 		)
 		if (UNIX)
