@@ -4,7 +4,7 @@ if (MSVC)
 else ()
 	set (TOLUAPP_EXE ${CMAKE_CURRENT_SOURCE_DIR}/tools/toluapp/toluapp)
 endif ()
-message("toluapp_exe location" ${TOLUAPP_EXE})
+message("toluapp_exe location1" ${TOLUAPP_EXE})
 
 function (pre_toluapp TARGET_DIR)
 	message (----------------------------------------)
@@ -21,7 +21,7 @@ function (pre_toluapp TARGET_DIR)
 		get_filename_component (FILE_NAME ${PKG_FILE} NAME_WE)
 		get_filename_component (FILE_PATH ${PKG_FILE} DIRECTORY)
 		execute_process (
-			message(${TOLUAPP_EXE})
+			message("toluapp_exe location2" ${TOLUAPP_EXE})
 			COMMAND "${TOLUAPP_EXE}" -s -o tolua_${FILE_NAME}.cpp ${FILE_NAME}.pkg
 			WORKING_DIRECTORY ${FILE_PATH}
 			RESULT_VARIABLE TOLUAPP_RES)
