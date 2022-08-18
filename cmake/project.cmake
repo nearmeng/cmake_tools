@@ -66,6 +66,7 @@ function (pre_project TARGET_NAME TARGET_TYPE)
 		"${TARGET_INC_DIR}/*.h"
 		"${TARGET_DIR}/*.pkg"
 		"${TARGET_DIR}/*.epkg"
+		"${TARGET_DIR}/*.lua"
 	)
 
 	set (SRC_FILES ${SRC_FILES} PARENT_SCOPE)
